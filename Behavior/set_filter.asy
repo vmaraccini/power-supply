@@ -1,0 +1,9 @@
+Version 4
+SymbolType BLOCK
+RECTANGLE Normal 96 -32 -64 32
+PIN 96 0 RIGHT 8
+PINATTR PinName SET
+PINATTR SpiceOrder 1
+PIN -64 0 LEFT 8
+PINATTR PinName PWM
+PINATTR SpiceOrder 2
