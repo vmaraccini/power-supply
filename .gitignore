@@ -1,1 +1,3 @@
 *.log
+*.asc_params
+Behavior/Tests/.idea
