@@ -26,9 +26,12 @@ class Simulator:
 
     def run_simulation(self, filename):
         filename = os.path.realpath(filename)
-        commands = [self.executable_path, "--ascii", "-b", "-run", filename]
+        commands = [self.executable_path, "--ascii", "-b", "-run"]
         if len(self.wine_executable) > 0:
             commands.insert(0, self.wine_executable)
+            commands.append("z:" + filename)
+        else:
+            commands.append(filename)
 
         call(commands)
         return filename.rsplit(".", 1)[0] + ".raw"
@@ -49,8 +52,8 @@ class Simulator:
                 return line
 
         result = map(lambda l: replace_param(l, params) if '.param' in l else l, lines)
-        result_string = str.join('\n', result)
-        new_filename = filename + "_params"
+        result_string = str.join('', result)
+        new_filename = filename
         with open(new_filename, 'w') as file:
             file.write(result_string)
 
