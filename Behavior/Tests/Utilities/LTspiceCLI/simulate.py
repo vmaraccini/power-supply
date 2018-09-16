@@ -12,7 +12,7 @@ class Simulator:
         :param wine_executable: The wine command if required. Pass "" if using wine is not required
         (i.e.: if running on Windows)
         """
-        self.executable_path = executable_path
+        self.executable_path = os.path.expanduser(executable_path)
         self.wine_executable = wine_executable
 
     def simulate(self, filename, params=None):
@@ -33,8 +33,15 @@ class Simulator:
         else:
             commands.append(filename)
 
-        call(commands)
-        return filename.rsplit(".", 1)[0] + ".raw"
+        file_path = filename.rsplit(".", 1)[0]
+        simulation_status = call(commands)
+        if simulation_status != 0:
+            log_path = file_path + ".log"
+            command = ['tail', '-n', '50', log_path]
+            call(command)
+            raise RuntimeError('Simulation failed, code: {}'.format(simulation_status))
+
+        return file_path + ".raw"
 
     def run_with_parameters(self, filename, params, func):
         if params is None:
