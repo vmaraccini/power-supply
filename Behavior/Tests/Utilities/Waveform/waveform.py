@@ -55,6 +55,7 @@ class Waveform:
         :param predicate: The predicate to use when selecting elements.
         :return: A list of new Waveforms with only the elements that "passed" the predicate for each contiguous section.
         """
+
         def append_contiguous(curr, el):
             if len(curr) == 0:
                 curr.append([el])
@@ -117,6 +118,8 @@ class Waveform:
         if isinstance(item, (int, long, float)):
             return self.interpolating(item)
         elif isinstance(item, list):
-            return self.matching(lambda (x, y): item in x)
+            return self.matching(lambda (x, y): x in item)
+        elif isinstance(item, slice):
+            return self.matching(lambda (x, y): item.start <= x <= item.stop)
         elif isinstance(item, tuple):
             return self.matching(lambda (x, y): item[0] <= x <= item[1])
