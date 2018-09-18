@@ -4,16 +4,16 @@ import os
 
 
 class Simulator:
-    def __init__(self, executable_path, wine_executable=""):
+    def __init__(self, executable_path, wine_args=[]):
         """
         Constructs a new Simulator instance.
 
         :param executable_path: The LTspice executable path
-        :param wine_executable: The wine command if required. Pass "" if using wine is not required
+        :param wine_args: The wine command list, if required. Pass [] if using wine is not required
         (i.e.: if running on Windows)
         """
-        self.executable_path = executable_path
-        self.wine_executable = wine_executable
+        self.executable_path = os.path.expanduser(executable_path)
+        self.wine_args = wine_args
 
     def simulate(self, filename, params=None):
         """
@@ -25,16 +25,22 @@ class Simulator:
         return self.run_with_parameters(filename, params, self.run_simulation)
 
     def run_simulation(self, filename):
-        filename = os.path.realpath(filename)
         commands = [self.executable_path, "--ascii", "-b", "-run"]
-        if len(self.wine_executable) > 0:
-            commands.insert(0, self.wine_executable)
+        if len(self.wine_args) > 0:
+            commands = self.wine_args + commands
             commands.append("z:" + filename)
         else:
             commands.append(filename)
 
-        call(commands)
-        return filename.rsplit(".", 1)[0] + ".raw"
+        file_path = filename.rsplit(".", 1)[0]
+        simulation_status = call(commands)
+        if simulation_status != 0:
+            log_path = file_path + ".log"
+            command = ['tail', '-n', '50', log_path]
+            call(command)
+            raise RuntimeError('Simulation failed, code: {}'.format(simulation_status))
+
+        return file_path + ".raw"
 
     def run_with_parameters(self, filename, params, func):
         if params is None:

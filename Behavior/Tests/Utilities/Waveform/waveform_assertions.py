@@ -1,3 +1,7 @@
+class WaveformAssertionException(Exception):
+    pass
+
+
 def settle_time(waveform, value, accuracy, min_duration=0):
     """
     Computes the settling time of a Waveform to a given value within some accuracy and minimum duration.
@@ -11,7 +15,7 @@ def settle_time(waveform, value, accuracy, min_duration=0):
     value_ranges = waveform.contiguous_value_within((value - accuracy, value + accuracy))
 
     if len(value_ranges) == 0:
-        raise Exception(
+        raise WaveformAssertionException(
             "Failed to find convergence to {} with {} accuracy".format(value, accuracy))
 
     for value_range in value_ranges:
@@ -22,7 +26,7 @@ def settle_time(waveform, value, accuracy, min_duration=0):
 
         return start, end - start
 
-    raise Exception("Convergence didn't last at least {}".format(min_duration))
+    raise WaveformAssertionException("Convergence didn't last at least {}".format(min_duration))
 
 
 def assert_settles(waveform, value, accuracy, min_duration=0, before=float("inf")):
@@ -40,30 +44,38 @@ def assert_settles(waveform, value, accuracy, min_duration=0, before=float("inf"
     value_range = time_range.value_within((value - accuracy, value + accuracy))
 
     if len(value_range) == 0:
-        raise Exception(
+        raise WaveformAssertionException(
             "Failed to find convergence to {} before time {} with {} accuracy".format(value, before, accuracy))
 
     start = value_range.timestamps[0]
     if start > before:
-        raise Exception("Convergence took longer than {}".format(before))
+        raise WaveformAssertionException("Convergence took longer than {}".format(before))
 
     end = value_range.timestamps[-1]
     if (end - start) < min_duration:
-        raise Exception("Convergence didn't last at least {}".format(min_duration))
+        raise WaveformAssertionException("Convergence didn't last at least {}".format(min_duration))
 
 
-def assert_bound(waveform, lower=float("-inf"), upper=float("inf")):
+def assert_bound(waveform, lower=float("-inf"), upper=float("inf"), ignore_before=1e-7):
     """
     Asserts whether a Waveform's values are lower and upper bound to the given values.
 
     :param waveform: The Waveform to analyse
     :param lower: The lower boundary
     :param upper: The upper boundary
+    :param ignore_before: Sets the minimum timestamp before which bounds are not checked. This is useful to ignore spurious values at the beginning of the simulation.
     """
+    if ignore_before is not None:
+        waveform = waveform[ignore_before:]
+
     value_range = waveform.value_within((lower, upper))
 
     if len(value_range) != len(waveform):
-        raise Exception("Waveform not entirely bound to ({}, {})".format(lower, upper))
+        outliers = waveform.value_within((float("-inf"), lower)).timestamps + \
+                   waveform.value_within((upper, float("inf"))).timestamps
+
+        raise WaveformAssertionException("Waveform not entirely bound to ({}, {}).\nExamples:{}"
+                                         .format(lower, upper, outliers))
 
 
 def assert_in_range(waveform, range):
