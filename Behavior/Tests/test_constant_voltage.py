@@ -2,8 +2,6 @@ from Utilities.Waveform.waveform import Waveform
 from simulation_runner import *
 from Utilities.Waveform.waveform_assertions import *
 from unittest import TestCase
-import os
-
 
 class TestConstantVoltage(TestCase):
     v_set = 5
