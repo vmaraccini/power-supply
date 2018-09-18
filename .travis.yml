@@ -6,4 +6,4 @@ services:
   - docker
 
 script: 
-  ./Behavior/test.sh
+  cd Behavior && ./test.sh
