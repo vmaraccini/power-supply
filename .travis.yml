@@ -9,4 +9,5 @@ before_script:
   sudo chown -R 1000:1000 $TRAVIS_BUILD_DIR
 
 script: 
-  cd Behavior && ./test.sh
+  - cd Behavior 
+  - ./test.sh
