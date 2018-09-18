@@ -11,8 +11,10 @@ class SimulationRunner:
 
     def simulate(self, params={}):
         simulator = Simulator(**self.config)
-        result_file = simulator.simulate(self.filename, params=params)
 
+        filename = os.path.realpath(self.filename)
+        result_file = simulator.simulate(filename, params=params)
+        
         parser = Parser()
         parser.parse(result_file)
 

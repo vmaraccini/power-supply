@@ -4,16 +4,16 @@ import os
 
 
 class Simulator:
-    def __init__(self, executable_path, wine_executable=""):
+    def __init__(self, executable_path, wine_args=[]):
         """
         Constructs a new Simulator instance.
 
         :param executable_path: The LTspice executable path
-        :param wine_executable: The wine command if required. Pass "" if using wine is not required
+        :param wine_args: The wine command list, if required. Pass [] if using wine is not required
         (i.e.: if running on Windows)
         """
         self.executable_path = os.path.expanduser(executable_path)
-        self.wine_executable = wine_executable
+        self.wine_args = wine_args
 
     def simulate(self, filename, params=None):
         """
@@ -25,10 +25,9 @@ class Simulator:
         return self.run_with_parameters(filename, params, self.run_simulation)
 
     def run_simulation(self, filename):
-        filename = os.path.realpath(filename)
         commands = [self.executable_path, "--ascii", "-b", "-run"]
-        if len(self.wine_executable) > 0:
-            commands.insert(0, self.wine_executable)
+        if len(self.wine_args) > 0:
+            commands = self.wine_args + commands
             commands.append("z:" + filename)
         else:
             commands.append(filename)

@@ -1,4 +1,4 @@
 {
   "executable_path": "~/.wine/drive_c/Program Files/LTC/LTspiceXVII/XVIIx86.exe",
-  "wine_executable": "wine"
+  "wine_args": ["xvfb-run", "wine"]
 }
