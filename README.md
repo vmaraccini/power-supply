@@ -1,4 +1,4 @@
-# Power Supply
+# Power Supply [![Build Status](https://travis-ci.com/vmaraccini/power-supply.svg?branch=master)](https://travis-ci.com/vmaraccini/power-supply)
 
 **A testable, open hardware power supply project**
 
