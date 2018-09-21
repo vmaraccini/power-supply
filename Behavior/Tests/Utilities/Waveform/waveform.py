@@ -120,6 +120,6 @@ class Waveform:
         elif isinstance(item, list):
             return self.matching(lambda (x, y): x in item)
         elif isinstance(item, slice):
-            return self.matching(lambda (x, y): item.start <= x <= item.stop)
+            return self.matching(lambda (x, y): (item.start or float("-inf")) <= x <= (item.stop or float("inf")))
         elif isinstance(item, tuple):
             return self.matching(lambda (x, y): item[0] <= x <= item[1])
