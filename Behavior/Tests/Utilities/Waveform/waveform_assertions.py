@@ -45,7 +45,10 @@ def assert_settles(waveform, value, accuracy, min_duration=0, before=float("inf"
 
     if len(value_range) == 0:
         raise WaveformAssertionException(
-            "Failed to find convergence to {} before time {} with {} accuracy".format(value, before, accuracy))
+            "Failed to find convergence to {} before time {} with {} accuracy for at least {}".format(value,
+                                                                                                      before,
+                                                                                                      accuracy,
+                                                                                                      min_duration))
 
     start = value_range.timestamps[0]
     if start > before:
@@ -63,7 +66,8 @@ def assert_bound(waveform, lower=float("-inf"), upper=float("inf"), ignore_befor
     :param waveform: The Waveform to analyse
     :param lower: The lower boundary
     :param upper: The upper boundary
-    :param ignore_before: Sets the minimum timestamp before which bounds are not checked. This is useful to ignore spurious values at the beginning of the simulation.
+    :param ignore_before: Sets the minimum timestamp before which bounds are not checked.
+     This is useful to ignore spurious values at the beginning of the simulation.
     """
     if ignore_before is not None:
         waveform = waveform[ignore_before:]
