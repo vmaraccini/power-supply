@@ -78,8 +78,9 @@ def assert_bound(waveform, lower=float("-inf"), upper=float("inf"), ignore_befor
         outliers = waveform.value_within((float("-inf"), lower)).timestamps + \
                    waveform.value_within((upper, float("inf"))).timestamps
 
-        raise WaveformAssertionException("Waveform not entirely bound to ({}, {}).\nExamples:{}"
-                                         .format(lower, upper, outliers))
+        array_desscription = "{}...{}".format(outliers[0:5], outliers[-5:]) if len(outliers) > 10 else str(outliers)
+        raise WaveformAssertionException("Waveform not entirely bound to ({}, {}).\nExamples: {}"
+                                         .format(lower, upper, array_desscription))
 
 
 def assert_in_range(waveform, range):
