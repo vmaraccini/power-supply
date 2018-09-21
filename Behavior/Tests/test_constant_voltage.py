@@ -12,7 +12,7 @@ class TestConstantVoltage(TestCase):
     def test_constant_voltage_mode(self):
         params = {
             "RLoad": "1e12",
-            "Vset": str(self.v_set)
+            "Vset": self.v_set
         }
 
         waveforms = SimulationRunner().simulate(params=params)

@@ -15,10 +15,10 @@ class TestConstantCurrent(TestCase):
         load = 1
         i_set = self.i_set / load
         params = {
-            "RLoad": str(load),
-            "Vset": str(self.v_set),
-            "Iset": str(i_set),
-            "Ilow": str(0)
+            "RLoad": load,
+            "Vset": self.v_set,
+            "Iset": i_set,
+            "Ilow": 0
         }
 
         waveforms = SimulationRunner().simulate(params=params)

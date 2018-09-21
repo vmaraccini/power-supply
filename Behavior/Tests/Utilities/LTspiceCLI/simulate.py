@@ -53,7 +53,7 @@ class Simulator:
             regex = re.compile(r".param (.*) .*")
             param_key = regex.search(line).group(1)
             if param_key in params:
-                return re.sub(r'.param (.*) .*', r".param \1 {}".format(params[param_key]), line)
+                return re.sub(r'.param (.*) .*', r".param \1 {}".format(str(params[param_key])), line)
             else:
                 return line
 
