@@ -10,3 +10,4 @@ before_script:
 
 script: 
   cd Behavior && ./test.sh
+  cd Behavior/Tests/Utilities/Waveform && ./test.sh
