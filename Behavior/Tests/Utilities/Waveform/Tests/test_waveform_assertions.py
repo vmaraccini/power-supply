@@ -25,13 +25,15 @@ class TestWaveformAssertions(TestCase):
         assert_bound(self.waveform, lower=0)
         assert_bound(self.waveform, upper=3)
         assert_bound(self.waveform, lower=0, upper=3)
-        self.assertRaises(Exception, lambda: assert_bound(self.waveform, lower=1))
-        self.assertRaises(Exception, lambda: assert_bound(self.waveform, upper=2))
+        assert_bound(self.waveform, lower=1, ignore_before=1)
+        self.assertRaises(Exception, lambda: assert_bound(self.waveform, lower=1, ignore_before=None))
+        self.assertRaises(Exception, lambda: assert_bound(self.waveform, upper=2, ignore_before=None))
 
     def test_assert_in_range(self):
         assert_in_range(self.waveform, (0, 3))
+        assert_in_range(self.waveform, (1, 5), ignore_before=1)
         self.assertRaises(Exception, lambda: assert_in_range(self.waveform, (0, 2)))
-        self.assertRaises(Exception, lambda: assert_in_range(self.waveform, (1, 5)))
+        self.assertRaises(Exception, lambda: assert_in_range(self.waveform, (1, 5)), ignore_before=None)
 
     def test_settle_time(self):
         waveform = Waveform(timestamps=[0, 1, 2, 3, 4, 5, 6, 7], values=[0, 3, 2, 2.2, 1.8, 2.1, 1.9, 2])
