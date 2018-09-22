@@ -65,7 +65,11 @@ class Waveform:
                 curr.append([el])
             return curr
 
-        timestamps, values = zip(*filter(predicate, zip(enumerate(self.timestamps), self.values)))
+        filtered = filter(predicate, zip(enumerate(self.timestamps), self.values))
+        if len(filtered) == 0:
+            return []
+
+        timestamps, values = zip(*filtered)
         contiguous_groups = reduce(append_contiguous, timestamps, [])
         indexes = [[y[0] for y in x] for x in contiguous_groups]
         sequences = map(lambda x: [(self.timestamps[y], self.values[y]) for y in x], indexes)
