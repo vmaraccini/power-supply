@@ -3,9 +3,11 @@ from simulation_runner import *
 from Utilities.Waveform.waveform_assertions import *
 from unittest import TestCase
 
+
 class TestConstantCurrent(TestCase):
     v_set = 12
     i_set = 0.5
+    min_voltage = 30e-3
     max_ripple = 2e-3
     max_overshoot = 0.2
     max_settle_time = 5e-3
@@ -37,11 +39,8 @@ class TestConstantCurrent(TestCase):
                      lower=0,
                      upper=self.i_set + self.max_overshoot)
 
-        # Current limit down to 0
-        start = self.current_limit_range[1]
-        assert_settles(output_current[start:],
-                       value=0,
-                       accuracy=self.max_ripple,
-                       min_duration=1e-3,
-                       before=self.max_settle_time + start)
-
+        # Current limit down to "0"
+        end = self.current_limit_range[1]
+        assert_bound(output_current[end + self.max_settle_time:],
+                     lower=0,
+                     upper=self.min_voltage)
