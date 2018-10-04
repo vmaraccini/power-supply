@@ -10,5 +10,5 @@ before_script:
 
 script: 
 - cd Behavior && ./test.sh
-- if [ "$TRAVIS_PULL_REQUEST" != "false" ]; ./upload_artifacts.sh; fi
+- if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then ./upload_artifacts.sh; fi
 - cd Tests/Utilities/Waveform && ./test.sh
