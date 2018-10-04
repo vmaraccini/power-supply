@@ -37,9 +37,9 @@ class TestWaveformAssertions(TestCase):
                           lambda: assert_bound(self.waveform, upper=2, ignore_before=None, generate_images=False))
 
     def test_assert_in_range(self):
-        assert_in_range(self.waveform, (0, 3))
-        assert_in_range(self.waveform, (1, 5), ignore_before=1)
-        self.assertRaises(Exception, lambda: assert_in_range(self.waveform, (0, 2)))
+        assert_in_range(self.waveform, (0, 3), generate_images=False)
+        assert_in_range(self.waveform, (1, 5), ignore_before=1, generate_images=False)
+        self.assertRaises(Exception, lambda: assert_in_range(self.waveform, (0, 2)), generate_images=False)
         self.assertRaises(Exception, lambda: assert_in_range(self.waveform, (1, 5)), ignore_before=None,
                           generate_images=False)
 
