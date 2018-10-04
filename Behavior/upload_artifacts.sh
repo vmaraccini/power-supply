@@ -4,6 +4,7 @@ GITHUB_API="https://api.github.com"
 upload_image() {
 	>&2 echo "Uploading $1"
 	DATA=$(cat $1 | base64)
+	>&2 echo "\n\nDATA: $DATA\n\n"
 	curl -s --request POST \
 	  --url $IMGUR_UPLOAD \
 	  --header "Authorization: Client-ID $IMGUR_ID" \
