@@ -7,7 +7,7 @@ upload_image() {
 	  --url $IMGUR_UPLOAD \
 	  --header "Authorization: Client-ID $IMGUR_ID" \
 	  --header 'content-type: multipart/form-data' \
-	  --form image=$DATA | jq -r '.["data"]["link"]'
+	  --form image=$DATA | tee /dev/fd/2 | jq -r '.["data"]["link"]'
 }
 
 post_comment() {
