@@ -1,8 +1,11 @@
-import matplotlib as mpl
+try:
+    import matplotlib as mpl
 
-mpl.use('Agg')
+    mpl.use('Agg')
+    import matplotlib.pyplot as plt
+except ImportError:
+    pass
 
-import matplotlib.pyplot as plt
 from inspect import getframeinfo, stack
 import os
 
