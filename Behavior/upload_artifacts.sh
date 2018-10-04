@@ -5,11 +5,11 @@ upload_image() {
 	>&2 echo "Uploading $1"
 	DATA=$(cat $1 | base64)
 	>&2 echo "\n\nDATA: $DATA\n\n"
-	curl -s --request POST \
+	curl -v -s --request POST \
 	  --url $IMGUR_UPLOAD \
 	  --header "Authorization: Client-ID $IMGUR_ID" \
 	  --header 'content-type: multipart/form-data' \
-	  --form image=$DATA | tee /dev/fd/2 | jq -r '.["data"]["link"]'
+	  --form image=$DATA | tee /dev/fd/2 | tail -1 | jq -r '.["data"]["link"]'
 }
 
 post_comment() {
