@@ -3,3 +3,5 @@
 Behavior/Tests/.idea
 *.raw
 *.net
+Behavior/Tests/assertion-passes
+Behavior/Tests/assertion-failures
