@@ -123,14 +123,14 @@ def assert_bound(waveform, lower=float("-inf"), upper=float("inf"), ignore_befor
     __image(failed=False)
 
 
-def assert_in_range(waveform, range, ignore_before=1e-7):
+def assert_in_range(waveform, range, ignore_before=1e-7, generate_images=True):
     """
     Asserts whether a Waveform'' values are withni a given range tuple.
 
     :param waveform: The Waveform to analyse
     :param range: A tuple containing the lower and upper bounds, respectively
     """
-    assert_bound(waveform, lower=range[0], upper=range[1], ignore_before=ignore_before)
+    assert_bound(waveform, lower=range[0], upper=range[1], ignore_before=ignore_before, generate_images=generate_images)
 
 
 def __save_settle_image(waveform, value, accuracy, failed=True):
