@@ -2,6 +2,7 @@ IMGUR_UPLOAD="https://api.imgur.com/3/image"
 GITHUB_API="https://api.github.com"
 
 upload_image() {
+	>&2 echo "Uploading $1"
 	DATA=$(cat $1 | base64)
 	curl -s --request POST \
 	  --url $IMGUR_UPLOAD \
