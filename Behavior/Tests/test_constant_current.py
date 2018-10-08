@@ -1,6 +1,7 @@
 from Utilities.Waveform.waveform import Waveform
 from simulation_runner import *
 from Utilities.Waveform.waveform_assertions import *
+from assert_component_ratings import *
 from unittest import TestCase
 
 
@@ -44,3 +45,5 @@ class TestConstantCurrent(TestCase):
         assert_bound(output_current[end + self.max_settle_time:],
                      lower=0,
                      upper=self.min_voltage)
+
+        assert_components(waveforms)

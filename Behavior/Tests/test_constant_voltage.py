@@ -2,6 +2,7 @@ from Utilities.Waveform.waveform import Waveform
 from simulation_runner import *
 from Utilities.Waveform.waveform_assertions import *
 from unittest import TestCase
+from assert_component_ratings import *
 
 
 class TestConstantVoltage(TestCase):
@@ -45,6 +46,8 @@ class TestConstantVoltage(TestCase):
                      lower=self.v_set - self.max_ripple,
                      upper=self.v_set + self.max_ripple)
 
+        assert_components(waveforms)
+
     def test_constant_voltage_mode_10_ohm(self):
         params = {
             "RLoad": "10",
@@ -78,3 +81,5 @@ class TestConstantVoltage(TestCase):
         assert_bound(output_voltage[settle_start:self.wait_duration],
                      lower=self.v_set - self.max_ripple,
                      upper=self.v_set + self.max_ripple)
+
+        assert_components(waveforms)
