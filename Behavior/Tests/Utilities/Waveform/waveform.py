@@ -105,11 +105,15 @@ class Waveform:
         if timestamp in self.timestamps:
             return self.values[self.timestamps.index(timestamp)]
         else:
+            if timestamp > max(self.timestamps):
+                return self.values[-1]
+
             index = next(x[0] for x in enumerate(self.timestamps) if x[1] > timestamp)
-            if index == 0 or index == len(self.timestamps) - 1:
+            if index == 0:
                 return self.values[index]
 
-            progress = (self.timestamps[index] - timestamp) / (self.timestamps[index] - self.timestamps[index - 1])
+            progress = 1 - (self.timestamps[index] - timestamp) / \
+                       float(self.timestamps[index] - self.timestamps[index - 1])
             final = self.values[index]
             initial = self.values[index - 1]
 

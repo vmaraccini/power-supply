@@ -39,6 +39,9 @@ class TestWaveform(TestCase):
 
     def test_interpolating(self):
         self.assertAlmostEqual(self.test_waveform[0.5], 3.5, 5)
+        self.assertAlmostEqual(self.test_waveform[0.25], 3.75, 5)
+        self.assertAlmostEqual(self.test_waveform[0.75], 3.25, 5)
+        self.assertAlmostEqual(self.test_waveform[0.999999], 3, 5)
 
     def test_timerange(self):
         time_range = self.test_waveform[(0, 2)]
