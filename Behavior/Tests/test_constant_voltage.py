@@ -29,11 +29,13 @@ class TestConstantVoltage(TestCase):
                        value=self.v_set,
                        accuracy=self.max_ripple,
                        min_duration=1e-3,
-                       before=self.max_settle_time)
+                       before=self.max_settle_time,
+                       label="Output settle open circuit")
 
         assert_bound(output_voltage,
                      lower=0,
-                     upper=self.v_set + self.max_overshoot)
+                     upper=self.v_set + self.max_overshoot,
+                     label="Max output voltage overshoot open circuit")
 
         settle_start, _ = settle_time(output_voltage,
                                       value=self.v_set,
@@ -44,7 +46,8 @@ class TestConstantVoltage(TestCase):
 
         assert_bound(output_voltage[settle_start:self.wait_duration],
                      lower=self.v_set - self.max_ripple,
-                     upper=self.v_set + self.max_ripple)
+                     upper=self.v_set + self.max_ripple,
+                     label="Max output voltage ripple open circuit")
 
         assert_components(waveforms)
 
@@ -65,11 +68,13 @@ class TestConstantVoltage(TestCase):
                        value=self.v_set,
                        accuracy=self.max_ripple,
                        min_duration=1e-3,
-                       before=self.max_settle_time)
+                       before=self.max_settle_time,
+                       label="Output settling 10 ohm")
 
         assert_bound(output_voltage,
                      lower=0,
-                     upper=self.v_set + self.max_overshoot)
+                     upper=self.v_set + self.max_overshoot,
+                     label="Max output voltage ripple overshoot 10 ohm")
 
         settle_start, _ = settle_time(output_voltage,
                                       value=self.v_set,
@@ -80,6 +85,7 @@ class TestConstantVoltage(TestCase):
 
         assert_bound(output_voltage[settle_start:self.wait_duration],
                      lower=self.v_set - self.max_ripple,
-                     upper=self.v_set + self.max_ripple)
+                     upper=self.v_set + self.max_ripple,
+                     label="Max output voltage ripple 10 ohm")
 
         assert_components(waveforms)
