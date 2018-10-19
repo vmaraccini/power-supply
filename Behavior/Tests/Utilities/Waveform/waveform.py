@@ -105,18 +105,81 @@ class Waveform:
         if timestamp in self.timestamps:
             return self.values[self.timestamps.index(timestamp)]
         else:
+            if timestamp > max(self.timestamps):
+                return self.values[-1]
+
             index = next(x[0] for x in enumerate(self.timestamps) if x[1] > timestamp)
-            if index == 0 or index == len(self.timestamps) - 1:
+            if index == 0:
                 return self.values[index]
 
-            progress = (self.timestamps[index] - timestamp) / (self.timestamps[index] - self.timestamps[index - 1])
+            progress = 1 - (self.timestamps[index] - timestamp) / \
+                       float(self.timestamps[index] - self.timestamps[index - 1])
             final = self.values[index]
             initial = self.values[index - 1]
 
             return initial + (final - initial) * progress
 
+    def __mul__(self, other):
+        if isinstance(other, (int, long, float)):
+            return Waveform(self.timestamps, [other * x for x in self.values])
+        if isinstance(other, Waveform):
+            if other.timestamps == self.timestamps:
+                other_values = other.values
+            else:
+                other_values = map(lambda x: other[x], self.timestamps)
+            return Waveform(self.timestamps, [x * y for (x, y) in zip(other_values, self.values)])
+        else:
+            raise Exception("Unimplemented multiplication between Waveform and {}".format(type(other)))
+
+    __rmul__ = __mul__
+
+    def __div__(self, other):
+        if isinstance(other, (int, long, float)):
+            return Waveform(self.timestamps, [float(x) / other for x in self.values])
+        if isinstance(other, Waveform):
+            if other.timestamps == self.timestamps:
+                other_values = other.values
+            else:
+                other_values = map(lambda x: other[x], self.timestamps)
+            return Waveform(self.timestamps, [float(x) / y for (x, y) in zip(self.values, other_values)])
+        else:
+            raise Exception("Unimplemented division between Waveform and {}".format(type(other)))
+
+    def __rdiv__(self, other):
+        if isinstance(other, (int, long, float)):
+            return Waveform(self.timestamps, [other / float(x) for x in self.values])
+        if isinstance(other, Waveform):
+            if other.timestamps == self.timestamps:
+                other_values = other.values
+            else:
+                other_values = map(lambda x: other[x], self.timestamps)
+            return Waveform(self.timestamps, [float(x) / y for (x, y) in zip(self.values, other_values)])
+        else:
+            raise Exception("Unimplemented division between Waveform and {}".format(type(other)))
+
+    def __add__(self, other):
+        if isinstance(other, Waveform):
+            if other.timestamps == self.timestamps:
+                other_values = other.values
+            else:
+                other_values = map(lambda x: other[x], self.timestamps)
+            return Waveform(self.timestamps, [sum(x) for x in zip(other_values, self.values)])
+        else:
+            raise Exception("Unimplemented add between Waveform and {}".format(type(other)))
+
+    def __sub__(self, other):
+        return self + Waveform(other.timestamps, [-x for x in other.values])
+
     def __len__(self):
         return len(self.timestamps)
+
+    def __eq__(self, other):
+        if isinstance(other, Waveform):
+            return other.values == self.values and other.timestamps == self.timestamps
+        return False
+
+    def __abs__(self):
+        return Waveform(self.timestamps, [abs(x) for x in self.values])
 
     def __getitem__(self, item):
         if isinstance(item, (int, long, float)):

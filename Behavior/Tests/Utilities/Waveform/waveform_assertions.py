@@ -41,7 +41,7 @@ def settle_time(waveform, value, accuracy, min_duration=0):
     raise WaveformAssertionException("Convergence didn't last at least {}".format(min_duration))
 
 
-def assert_settles(waveform, value, accuracy, min_duration=0, before=float("inf"), generate_images=True):
+def assert_settles(waveform, value, accuracy, min_duration=0, before=float("inf"), generate_images=True, label=""):
     """
     Asserts whether a Waveform settles to a given value with a given accuracy and minimum duration before a
     maximum time.
@@ -65,7 +65,7 @@ def assert_settles(waveform, value, accuracy, min_duration=0, before=float("inf"
 
     def __image(failed=True):
         if generate_images:
-            __save_settle_image(time_range, value=value, accuracy=accuracy, failed=failed)
+            __save_settle_image(time_range, value=value, accuracy=accuracy, failed=failed, label=label)
 
     for value_range in value_ranges:
         start = value_range.timestamps[0]
@@ -84,7 +84,7 @@ def assert_settles(waveform, value, accuracy, min_duration=0, before=float("inf"
          did not occur before {}. Actual settling time: {}".format(min_duration, before, actual_settle_time))
 
 
-def assert_bound(waveform, lower=float("-inf"), upper=float("inf"), ignore_before=1e-7, generate_images=True):
+def assert_bound(waveform, lower=float("-inf"), upper=float("inf"), ignore_before=1e-7, generate_images=True, label=""):
     """
     Asserts whether a Waveform's values are lower and upper bound to the given values.
 
@@ -107,7 +107,8 @@ def assert_bound(waveform, lower=float("-inf"), upper=float("inf"), ignore_befor
         if generate_images:
             __save_image(waveform, max(min(waveform.values), lower), min(upper, max(waveform.values)),
                          margin=(min(waveform.values) + max(waveform.values)) / 10.0,
-                         failed=failed)
+                         failed=failed,
+                         label=label)
 
     if len(value_range.timestamps) == 0:
         __image()
@@ -136,21 +137,25 @@ def assert_in_range(waveform, range, ignore_before=1e-7, generate_images=True):
     assert_bound(waveform, lower=range[0], upper=range[1], ignore_before=ignore_before, generate_images=generate_images)
 
 
-def __save_settle_image(waveform, value, accuracy, failed=True):
+def __save_settle_image(waveform, value, accuracy, failed=True, label=""):
     __save_image(waveform,
                  min_y=value - accuracy,
                  max_y=value + accuracy,
                  margin=3 * accuracy,
-                 failed=failed)
+                 failed=failed,
+                 label=label)
 
 
-def __save_image(waveform, min_y, max_y, margin=0.0, failed=True):
+def __save_image(waveform, min_y, max_y, margin=0.0, failed=True, label=""):
     # Find calling test by searching stacktrace
     test_stack_index = next(i for (i, x) in enumerate(stack()) if 'test_' in getframeinfo(x[0]).function)
     caller = getframeinfo(stack()[test_stack_index][0])
 
     fig = plt.figure()
     ax = fig.add_subplot(111)
+
+    if len(label) > 0:
+        ax.set_title(label)
 
     ax.plot(waveform.timestamps, waveform.values)
     ax.fill_between([0, max(waveform.timestamps)], [min_y, min_y], [max_y, max_y],
